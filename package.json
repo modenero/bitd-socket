@@ -1,7 +1,7 @@
 {
-  "name": "fountainhead-sockserve",
-  "version": "0.0.4",
-  "description": "bitsocket frontend",
+  "name": "bitd-socket",
+  "version": "22.5.16",
+  "description": "Socket server for BitD (Bitcion Database).",
   "main": "index.js",
   "scripts": {
     "start": "node index"
@@ -9,11 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^6.0.0",
-    "ejs": "^2.6.1",
-    "express": "^4.16.3",
-    "fountainhead-core": "0.0.2",
-    "ip": "^1.1.5"
+    "cors": "2.8.5",
+    "dotenv": "16.0.1",
+    "ejs": "3.1.8",
+    "express": "4.18.1",
+    "fountainhead-core": "0.0.12",
+    "ip": "1.1.8"
   }
 }

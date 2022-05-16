@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({ path: __dirname + '/.env' })
 const express = require('express')
 const ip = require('ip')
 const app = express()
@@ -67,4 +67,3 @@ bitsocketd.init({
     },
     heartbeat: 10
 });
-
