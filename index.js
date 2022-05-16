@@ -1,58 +1,67 @@
 require('dotenv').config({ path: __dirname + '/.env' })
-const express = require('express')
-const ip = require('ip')
-const app = express()
-const cors = require("cors")
+
 const bitsocketd = require('fountainhead-core').bitsocketd
+const cors = require('cors')
+const ip = require('ip')
+const path = require('path')
+
+const express = require('express')
+const app = express()
 
 const config = {
-  "query": {
-    "v": 3,
-    "q": { "find": {} }
-  },
-  "host": process.env.sockserve_host ? process.env.sockserve_host : "http://127.0.0.1",
-  "port": Number.parseInt(process.env.sockserve_port ? process.env.sockserve_port : 3001)
-};
-config.url = config.host + ":" + config.port + "/s/";
+    query: {
+        v: 3,
+        q: { find: {} }
+    },
+    host: process.env.sockserve_host ? process.env.sockserve_host : 'http://127.0.0.1',
+    port: Number.parseInt(process.env.sockserve_port ? process.env.sockserve_port : 3001),
+}
 
-var db
+config.url = config.host + ':' + config.port + '/s/'
+
+let db
 
 app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, '/views'))
 app.use(express.static('public'))
 app.use(cors())
-app.enable("trust proxy")
-app.get(/^\/channel\/(.+)/, function(req, res) {
-  let encoded = req.params[0]
-  let decoded = Buffer.from(encoded, 'base64').toString()
-  res.render('channel', {
-    bitserve_url: config.url,
-    code: decoded,
-    bitdb: process.env.same_domain_bitdb
-  })
-});
+app.enable('trust proxy')
+
+app.get(/^\/channel\/(.+)/, function (req, res) {
+    let encoded = req.params[0]
+    let decoded = Buffer.from(encoded, 'base64').toString()
+
+    res.render('channel', {
+        bitserve_url: config.url,
+        code: decoded,
+        bitdb: process.env.same_domain_bitdb
+    })
+})
+
 app.get('/channel', function (req, res) {
-  res.render('channel', {
-    bitserve_url: config.url,
-    code: JSON.stringify(config.query, null, 2),
-    bitdb: process.env.same_domain_bitdb
-  })
-});
-app.get('/', function(req, res) {
-  res.redirect('/channel')
-});
+    res.render('channel', {
+        bitserve_url: config.url,
+        code: JSON.stringify(config.query, null, 2),
+        bitdb: process.env.same_domain_bitdb
+    })
+})
+
+app.get('/', function (req, res) {
+    res.redirect('/channel')
+})
+
 app.listen(config.port, () => {
-  console.log("######################################################################################");
-  console.log("#")
-  console.log("#  SOCKSERVE: Bitsocket Microservice")
-  console.log("#  Serving Transactions through HTTP...")
-  console.log("#")
-  console.log(`#  Channel: ${ip.address()}:${config.port}/channel`);
-  console.log("#")
-  console.log("#  Learn more at https://docs.fountainhead.cash")
-  console.log("#")
-  console.log("######################################################################################");
-  }
-)
+    console.log('######################################################################################');
+    console.log('#')
+    console.log('#  SOCKSERVE: Bitsocket Microservice')
+    console.log('#  Serving Transactions through HTTP...')
+    console.log('#')
+    console.log(`#  Channel: ${ip.address()}:${config.port}/channel`);
+    console.log('#')
+    console.log('#  Learn more at https://docs.fountainhead.cash')
+    console.log('#')
+    console.log('######################################################################################');
+})
 
 bitsocketd.init({
     bit: {
@@ -66,4 +75,4 @@ bitsocketd.init({
         logs: 'dev'
     },
     heartbeat: 10
-});
+})
